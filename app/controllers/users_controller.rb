@@ -84,7 +84,11 @@ class UsersController < ApplicationController
 			:last_name,
 			:email,
 			:city,
-			:password)
-	  end
+			:password,
+			:phone,
+			:travel_distance,
+			:description,
+			:website)
+		end
+		
   end
-  
