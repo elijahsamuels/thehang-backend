@@ -84,11 +84,15 @@ class UsersController < ApplicationController
 			:last_name,
 			:email,
 			:city,
+			:state,
 			:password,
 			:phone,
 			:travel_distance,
 			:description,
-			:website)
+			:website,
+			:primary_instrument_id,
+			:secondary_instrument_id,
+			:other_instruments)
 		end
 		
   end
