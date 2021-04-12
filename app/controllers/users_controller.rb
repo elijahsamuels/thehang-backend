@@ -17,9 +17,6 @@ class UsersController < ApplicationController
 	#   @user = User.new
 	# end
   
-	# GET /users/1/edit
-	# def edit
-	# end
   
 	# POST /users or /users.json
 	def create
@@ -80,6 +77,7 @@ class UsersController < ApplicationController
 	  # Only allow a list of trusted parameters through.
 	  def user_params
 		params.require(:user).permit(
+			:id,
 			:first_name,
 			:last_name,
 			:email,
