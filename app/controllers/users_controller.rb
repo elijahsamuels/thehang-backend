@@ -20,14 +20,29 @@ class UsersController < ApplicationController
   
 	# POST /users or /users.json
 	def create
-		@user = User.new(user_params)
-  
-		if @user.save
-			render json: @user, status: :created, location: @user 
-		else
-			render json: @user.errors, status: :unprocessable_entity
+		# byebug
+		user = User.find_by_email(userObj_params[:email])
+		if !!user # should ALWAYS be true since its a user from Google. Only have the truthy if/else just in case something does go wrong.
+			render json: user, status: :created, location: user
+		elsif !user
+			# this should send a message to React to redirect the user to l
+			# byebug
+			user = User.new(email: userObj_params.email,
+				first_name: userObj_params.givenName,
+				last_name: userObj_params.familyName,
+				# googleId: userObj_params.googleId,
+				# image: userObj_params.imageUrl,
+			)
+			render json: user, status: :created, location: user
+
+			# render json: user.errors, status: :unprocessable_entity
 		end
-	end
+		# find user by email
+		# if !!email then return that user as the currentUser
+		# if !email 
+		# @user = User.new(user_params)
+		# email = user_params[:email]
+  	end
 			# DELETE
 			#   respond_to do |format|
 			# 	if @user.save
@@ -75,7 +90,7 @@ class UsersController < ApplicationController
 	  end
   
 	  # Only allow a list of trusted parameters through.
-	  def user_params
+		def user_params
 		params.require(:user).permit(
 			:id,
 			:first_name,
@@ -90,7 +105,18 @@ class UsersController < ApplicationController
 			:website,
 			:primary_instrument_id,
 			:secondary_instrument_id,
-			:other_instruments)
+			:other_instruments
+		)
 		end
-		
+
+		def userObj_params
+			params.require(:userObj).permit(
+				:googleId,
+				:imageUrl,
+				:email,
+				:name,
+				:givenName,
+				:familyName
+			)
+		end		
   end
