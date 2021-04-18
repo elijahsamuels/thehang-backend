@@ -43,20 +43,21 @@ class UsersController < ApplicationController
 		# if !email 
 		# @user = User.new(user_params)
 		# email = user_params[:email]
-  	end
-			# DELETE
-			#   respond_to do |format|
-			# 	if @user.save
-			# 	  format.html { redirect_to @user, notice: "User was successfully created." }
-			# 	  format.json { render :show, status: :created, location: @user }
-			# 	else
-			# 	  format.html { render :new, status: :unprocessable_entity }
-			# 	  format.json { render json: @user.errors, status: :unprocessable_entity }
-			# 	end
-			#   end
-  
+	end
+	# DELETE
+	#   respond_to do |format|
+	# 	if @user.save
+	# 	  format.html { redirect_to @user, notice: "User was successfully created." }
+	# 	  format.json { render :show, status: :created, location: @user }
+	# 	else
+	# 	  format.html { render :new, status: :unprocessable_entity }
+	# 	  format.json { render json: @user.errors, status: :unprocessable_entity }
+	# 	end
+	#   end
+	
 	# PATCH/PUT /users/1 or /users/1.json
 	def update
+		byebug
 		if @user.update(user_params)
 			render json: @user
 		else
@@ -77,11 +78,14 @@ class UsersController < ApplicationController
   
 	# DELETE /users/1 or /users/1.json
 	def destroy
-		@hideUser = User.find_by_email(userObj_params[:email])
+		byebug
+		@hideUser = User.find_by(email: params[:user][:email])
+		byebug
 		@hideUser.hidden = true
 		@hideUser.save
 		@users = User.where(hidden: false)
 		render json: @users
+		byebug
 
 	#   @user.destroy
 	#   respond_to do |format|
@@ -113,6 +117,7 @@ class UsersController < ApplicationController
 			:primary_instrument_id,
 			:secondary_instrument_id,
 			:other_instruments,
+			:imageUrl,
 			:hidden
 		)
 		end
