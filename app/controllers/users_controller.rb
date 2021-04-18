@@ -3,7 +3,7 @@ class UsersController < ApplicationController
   
 	# GET /users or /users.json
 	def index
-	  @users = User.all
+	  @users = User.where(hidden: false)
 	  render json: @users
 	end
   
@@ -30,8 +30,9 @@ class UsersController < ApplicationController
 			user = User.new(email: userObj_params.email,
 				first_name: userObj_params.givenName,
 				last_name: userObj_params.familyName,
-				# googleId: userObj_params.googleId,
-				# image: userObj_params.imageUrl,
+				googleId: userObj_params.googleId,
+				imageUrl: userObj_params.imageUrl,
+				hidden: false,
 			)
 			render json: user, status: :created, location: user
 
@@ -76,11 +77,17 @@ class UsersController < ApplicationController
   
 	# DELETE /users/1 or /users/1.json
 	def destroy
-	  @user.destroy
-	  respond_to do |format|
-		format.html { redirect_to users_url, notice: "User was successfully removed." }
-		format.json { head :no_content }
-	  end
+		@hideUser = User.find_by_email(userObj_params[:email])
+		@hideUser.hidden = true
+		@hideUser.save
+		@users = User.where(hidden: false)
+		render json: @users
+
+	#   @user.destroy
+	#   respond_to do |format|
+	# 	format.html { redirect_to users_url, notice: "User was successfully removed." }
+	# 	format.json { head :no_content }
+	#   end
 	end
   
 	private
@@ -105,7 +112,8 @@ class UsersController < ApplicationController
 			:website,
 			:primary_instrument_id,
 			:secondary_instrument_id,
-			:other_instruments
+			:other_instruments,
+			:hidden
 		)
 		end
 
@@ -116,7 +124,8 @@ class UsersController < ApplicationController
 				:email,
 				:name,
 				:givenName,
-				:familyName
+				:familyName,
+				:hidden
 			)
 		end		
   end
