@@ -20,13 +20,10 @@ class UsersController < ApplicationController
   
 	# POST /users or /users.json
 	def create
-		# byebug
 		user = User.find_by_email(userObj_params[:email])
 		if !!user # should ALWAYS be true since its a user from Google. Only have the truthy if/else just in case something does go wrong.
 			render json: user, status: :created, location: user
 		elsif !user
-			# this should send a message to React to redirect the user to l
-			# byebug
 			user = User.new(email: userObj_params.email,
 				first_name: userObj_params.givenName,
 				last_name: userObj_params.familyName,
@@ -36,56 +33,25 @@ class UsersController < ApplicationController
 			)
 			render json: user, status: :created, location: user
 
-			# render json: user.errors, status: :unprocessable_entity
 		end
-		# find user by email
-		# if !!email then return that user as the currentUser
-		# if !email 
-		# @user = User.new(user_params)
-		# email = user_params[:email]
 	end
-	# DELETE
-	#   respond_to do |format|
-	# 	if @user.save
-	# 	  format.html { redirect_to @user, notice: "User was successfully created." }
-	# 	  format.json { render :show, status: :created, location: @user }
-	# 	else
-	# 	  format.html { render :new, status: :unprocessable_entity }
-	# 	  format.json { render json: @user.errors, status: :unprocessable_entity }
-	# 	end
-	#   end
 	
 	# PATCH/PUT /users/1 or /users/1.json
 	def update
-		byebug
 		if @user.update(user_params)
 			render json: @user
 		else
 			render json: @user.errors, status: :unprocessable_entity
 		end
 	end
-				# DELETE
-				#   respond_to do |format|
-				# 	if @user.update(user_params)
-				# 	  format.html { redirect_to @user, notice: "User was successfully updated." }
-				# 	  format.json { render :show, status: :ok, location: @user }
-				# 	else
-				# 	  format.html { render :edit, status: :unprocessable_entity }
-				# 	  format.json { render json: @user.errors, status: :unprocessable_entity }
-				# 	end
-				#   end
-				# end
   
 	# DELETE /users/1 or /users/1.json
 	def destroy
-		byebug
 		@hideUser = User.find_by(email: params[:user][:email])
-		byebug
 		@hideUser.hidden = true
 		@hideUser.save
 		@users = User.where(hidden: false)
 		render json: @users
-		byebug
 
 	#   @user.destroy
 	#   respond_to do |format|
